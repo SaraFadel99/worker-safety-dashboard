@@ -1,0 +1,33 @@
+<div class="search-container">
+  <h2>Search for a location</h2>
+
+  <div class="search-box">
+    <input
+      type="text"
+      [(ngModel)]="query"
+      (keyup.enter)="onSearch()"
+      (input)="onSearch()"
+      placeholder="Type an address or place..."
+      autocomplete="off"
+    />
+    <button (click)="onSearch()" [disabled]="isLoading()">Search</button>
+  </div>
+
+  @if (isLoading()) {
+    <p>Searching...</p>
+  }
+
+  <ul class="results">
+    @for (r of results(); track r.label) {
+      <li (click)="selectResult(r)">
+        {{ r.label }}
+      </li>
+    }
+  </ul>
+
+  <div class="actions">
+    <button class="secondary" (click)="goToMapPicker()">
+      Or pick location on the map
+    </button>
+  </div>
+</div>
