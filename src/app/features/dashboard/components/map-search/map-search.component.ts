@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import { LocationService, SelectedLocation } from '../../services/location.service';
 import { CommonModule } from '@angular/common';
+import { isInsideUSA } from '../../services/mapHelper';
 
 
 @Component({
@@ -15,7 +16,14 @@ import { CommonModule } from '@angular/common';
 export class MapSearchComponent {
 
 
-  private provider = new OpenStreetMapProvider();
+  private provider = new OpenStreetMapProvider({
+      params: {
+    countrycodes: 'us',          // only return US results
+    // optional: limit the search area
+    // viewbox: '-125,49.5,-66.5,24.3',
+    // bounded: 1
+  }
+  });
   private locationService = inject(LocationService);
   private router = inject(Router);
 
@@ -41,7 +49,15 @@ export class MapSearchComponent {
     }
   }
 
-  selectResult(result: any) {
+  selectResult(result: any) 
+  {
+    const lat = result.y;
+    const lng = result.x;
+    if (!isInsideUSA(lat, lng)) 
+    {
+      alert('Please choose a location inside the United States.');
+      return;
+    }
     const loc: SelectedLocation = {
       lat: result.y,
       lng: result.x,
