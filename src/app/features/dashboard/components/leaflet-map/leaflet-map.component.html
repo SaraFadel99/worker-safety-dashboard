@@ -1,4 +1,31 @@
 <div class="map-wrapper">
   <div #mapContainer class="map"></div>
-  <p class="hint">Click anywhere on the map to pick a location</p>
+
+  <!-- Hint (only shown when nothing is pending) -->
+  @if (!pendingLocation() && !isLoading()) {
+    <p class="hint">Click anywhere on the map to pick a location</p>
+  }
+
+  <!-- Loading indicator -->
+  @if (isLoading()) {
+    <div class="status-bar loading">
+      <div class="spinner"></div>
+      <span>Getting address...</span>
+    </div>
+  }
+
+  <!-- Confirmation panel -->
+  @if (pendingLocation() && !isLoading()) {
+    <div class="status-bar confirm">
+      <div class="address">
+        <strong>Selected location:</strong>
+        <span>{{ pendingLocation()?.label }}</span>
+      </div>
+
+      <div class="actions">
+        <button class="btn cancel" (click)="cancelLocation()">Cancel</button>
+        <button class="btn confirm" (click)="confirmLocation()">Confirm</button>
+      </div>
+    </div>
+  }
 </div>

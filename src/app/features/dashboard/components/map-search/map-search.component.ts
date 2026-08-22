@@ -49,12 +49,12 @@ export class MapSearchComponent {
     };
     this.locationService.setLocation(loc);
     // Option A: navigate to map
-    this.router.navigate(['/map']);
+    this.router.navigate(['/mapView']);
     // Option B: if you keep both components visible, just emit or let the service signal update the map
   }
 
   goToMapPicker() {
     this.locationService.clear();
-    this.router.navigate(['/map']);
+    this.router.navigate(['/mapView']);
   }
 }
