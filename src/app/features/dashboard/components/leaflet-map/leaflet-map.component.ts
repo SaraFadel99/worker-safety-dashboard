@@ -11,11 +11,10 @@ import {
 import * as L from 'leaflet';
 import { LocationService } from '../../services/location.service';
 import { CommonModule } from '@angular/common';
-import { US_BOUNDS, getRealLocalHour, isInsideUSA } from '../../services/mapHelper';
-import { SafetyService } from '../../../../core/services/safety.service';
-import { SafetyCardRequest } from '../../../../core/models/SafetyCardRequest';
+import { US_BOUNDS, isInsideUSA } from '../../services/mapHelper';
 import tzlookup from 'tz-lookup';
-
+import { EventEmitter, Input, Output } from '@angular/core';
+import { SelectedLocation } from '../../services/location.service';
 
 const iconRetinaUrl = 'assets/leaflet/images/marker-icon-2x.png';
 const iconUrl = 'assets/leaflet/images/marker-icon.png';
@@ -55,7 +54,23 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
 
   private clicksDisabled = false;
 
-  private safetyService= inject(SafetyService);
+  // The dashboard owns the safety API call.
+ @Input() set locationToConfirm(location: SelectedLocation | null) {
+  if (!location) return;
+   this.pendingLocation.set({
+    lat: location.lat,
+    lng: location.lng,
+    label: location.label,
+    timeZone: ''
+  });
+
+  if (this.map) 
+  {
+    this.placeMarker(location.lat, location.lng, location.label);
+  }
+}
+
+@Output() locationConfirmed = new EventEmitter<SelectedLocation>();
 
   constructor() {
     effect(() => {
@@ -171,12 +186,19 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
   {
     console.warn('Could not determine timezone', e);
   }
-  this.locationService.setLocation(pending);
 
+   
 
-    console.log(getRealLocalHour(pending.timeZone))
-    this.checkLocationSafety(pending.lat, pending.lng, pending.timeZone)
-    this.showConfirmedLocation(pending.lat, pending.lng, pending.label);
+  const location: SelectedLocation = {
+    lat: pending.lat,
+    lng: pending.lng,
+    label: pending.label,
+    timezone
+  };
+
+  this.locationService.setLocation(location);
+  this.locationConfirmed.emit(location);
+  this.showConfirmedLocation(location.lat, location.lng, location.label);
   }
 
   cancelLocation() {
@@ -220,28 +242,11 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
     return data.display_name;
   }
 
-  checkLocationSafety(lat:number, lon:number, timezone:string)
-  {
-     
-    let reqData:SafetyCardRequest = 
-    {
-       lat:lat,
-       lon :lon,
-       neededDate:getRealLocalHour(timezone),
-       timeZone:timezone,
-       granularity:60
-    }
-   
-    console.log(timezone);
-    this.safetyService.locationSafety(reqData).subscribe(res=>
-      {
-          console.log(res)
-      })
-  }
-
   ngOnDestroy() {
     if (this.map) {
       this.map.remove();
     }
+
+    
   }
 }

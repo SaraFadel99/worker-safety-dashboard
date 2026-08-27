@@ -1,2 +1,9 @@
-<app-map-search></app-map-search>
-<!-- <app-site-card [state]="" [data]="" [errorMessage] ="" ></app-site-card> -->
+<app-map-search
+  (locationPicked)="onLocationPicked($event)">
+</app-map-search>
+
+<app-site-card
+  [state]="cardState()"
+  [data]="cardData()"
+  [errorMessage]="errorMessage()">
+</app-site-card>

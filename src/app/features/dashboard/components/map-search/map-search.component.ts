@@ -5,7 +5,7 @@ import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import { LocationService, SelectedLocation } from '../../services/location.service';
 import { CommonModule } from '@angular/common';
 import { isInsideUSA } from '../../services/mapHelper';
-
+import { EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-map-search',
@@ -15,6 +15,7 @@ import { isInsideUSA } from '../../services/mapHelper';
 })
 export class MapSearchComponent {
 
+@Output() locationPicked = new EventEmitter<SelectedLocation>();
 
   private provider = new OpenStreetMapProvider({
       params: {
@@ -63,9 +64,18 @@ export class MapSearchComponent {
       lng: result.x,
       label: result.label
     };
-    this.locationService.setLocation(loc);
+    
+  const confirmed = window.confirm(
+    `Use this location?\n\n${loc.label}`
+  );
+
+  if (confirmed) {
+    this.locationPicked.emit(loc);
+    this.results.set([]);
+  }
+   ////this.locationService.setLocation(loc);
     // Option A: navigate to map
-    this.router.navigate(['/mapView']);
+   //// this.router.navigate(['/mapView']);
     // Option B: if you keep both components visible, just emit or let the service signal update the map
   }
 
