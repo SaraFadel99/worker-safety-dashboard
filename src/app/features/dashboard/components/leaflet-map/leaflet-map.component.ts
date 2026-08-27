@@ -227,7 +227,7 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
     {
        lat:lat,
        lon :lon,
-       neededDate:getRealLocalHour(timezone),//can remove the reel time now
+       neededDate:getRealLocalHour(timezone),
        timeZone:timezone,
        granularity:60
     }

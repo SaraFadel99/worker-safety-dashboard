@@ -1,5 +1,6 @@
   export interface SafetyCardResponse
   {
+    siteName: string;
     latitude:number;
     longitude:number;
     timestamp:Date;
@@ -12,3 +13,17 @@
     suggestion:string;
     keyConcern:string;
   }     
+
+
+
+  // export interface SafetyCardResponse {
+  //   siteName: string;
+  //   lat: number;
+  //   lon: number;
+  //   riskLevel: RiskLevel;
+  //   tempC: number;
+  //   heatIndexC: number;
+  //   wetBulbC: number;
+  //   recommendation: string;
+  // }
+  

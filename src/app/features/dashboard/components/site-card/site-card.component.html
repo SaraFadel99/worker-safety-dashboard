@@ -1,0 +1,94 @@
+<div class="safety-card" [ngSwitch]="state">
+
+  <!-- IDLE: nothing picked on the map yet -->
+  <div *ngSwitchCase="'idle'" class="safety-card__idle">
+    <div class="safety-card__idle-icon" aria-hidden="true">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+        <path d="M12 21s-7-6.2-7-11.2A7 7 0 0 1 19 9.8C19 14.8 12 21 12 21Z" stroke="currentColor" stroke-width="1.6"/>
+        <circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.6"/>
+      </svg>
+    </div>
+    <p class="safety-card__idle-title">Pick a site on the map</p>
+    <p class="safety-card__idle-sub">Search an address or drop a pin to see its heat safety reading.</p>
+  </div>
+
+  <!-- LOADING: chain is running (Open-Meteo -> FortyGuard -> Gemini) -->
+  <div *ngSwitchCase="'loading'" class="safety-card__loading" role="status" aria-live="polite">
+    <div class="safety-card__loading-header">
+      <div class="skeleton skeleton--title"></div>
+      <div class="skeleton skeleton--badge"></div>
+    </div>
+    <div class="skeleton skeleton--sub"></div>
+    <div class="safety-card__loading-stats">
+      <div class="skeleton skeleton--stat"></div>
+      <div class="skeleton skeleton--stat"></div>
+      <div class="skeleton skeleton--stat"></div>
+    </div>
+    <div class="skeleton skeleton--banner"></div>
+    <p class="safety-card__loading-caption">Checking conditions — this can take a few seconds…</p>
+  </div>
+
+  <!-- ERROR: chain failed -->
+  <div *ngSwitchCase="'error'" class="safety-card__error" role="alert">
+    <div class="safety-card__error-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M12 7.5v5.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="12" cy="16.3" r="1" fill="currentColor"/>
+      </svg>
+    </div>
+    <p class="safety-card__error-title">Reading unavailable</p>
+    <p class="safety-card__error-sub">{{ errorMessage }}</p>
+    <button type="button" class="safety-card__retry" (click)="onRetry()">Try again</button>
+  </div>
+
+  <!-- SUCCESS: data ready -->
+  <ng-container *ngSwitchCase="'success'">
+    <div class="safety-card__success" *ngIf="data as d">
+      <div class="safety-card__header">
+        <div>
+          <h3 class="safety-card__site">Selected site</h3>
+          <p class="safety-card__coords">{{ d.latitude.toFixed(2) }} N, {{ d.longitude.toFixed(2) }} W</p>
+        </div>
+        <span class="badge" [class]="'badge--' + badgeClass(d.badge)">{{ d.badge }}</span>
+      </div>
+
+      <div class="safety-card__stats">
+        <div class="stat">
+          <span class="stat__label">Heat index</span>
+          <span class="stat__value">{{ d.heatIndexF | number:'1.0-0' }}°F</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Wet bulb</span>
+          <span class="stat__value">{{ d.wetBulbF | number:'1.0-0' }}°F</span>
+        </div>
+        <div class="stat">
+          <span class="stat__label">Humidity</span>
+          <span class="stat__value">{{ d.humidityPercent | number:'1.0-0' }}%</span>
+        </div>
+      </div>
+
+      <div class="safety-card__banner" [class]="'safety-card__banner--' + badgeClass(d.badge)">
+        <svg *ngIf="riskIcon(d.badge) === 'warning'" class="banner-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 4 22 20H2L12 4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+          <path d="M12 10v4.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="12" cy="17.2" r="0.9" fill="currentColor"/>
+        </svg>
+        <svg *ngIf="riskIcon(d.badge) === 'info'" class="banner-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="1.6"/>
+          <path d="M12 11v5.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <circle cx="12" cy="7.8" r="0.9" fill="currentColor"/>
+        </svg>
+        <svg *ngIf="riskIcon(d.badge) === 'check'" class="banner-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="1.6"/>
+          <path d="m7.8 12.3 2.7 2.7 5.7-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="safety-card__banner-text">
+          <strong>{{ d.keyConcern }}</strong>
+          <span>{{ d.suggestion }}</span>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+</div>
