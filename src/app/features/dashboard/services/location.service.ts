@@ -4,6 +4,7 @@ export interface SelectedLocation {
   lat: number;
   lng: number;
   label: string;
+  timezone?: string;
 }
 
 @Injectable({ providedIn: 'root' })

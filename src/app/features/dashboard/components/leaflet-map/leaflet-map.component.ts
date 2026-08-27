@@ -11,7 +11,11 @@ import {
 import * as L from 'leaflet';
 import { LocationService } from '../../services/location.service';
 import { CommonModule } from '@angular/common';
-import { US_BOUNDS, isInsideUSA } from '../../services/mapHelper';
+import { US_BOUNDS, getRealLocalHour, isInsideUSA } from '../../services/mapHelper';
+import { SafetyService } from '../../../../core/services/safety.service';
+import { SafetyCardRequest } from '../../../../core/models/SafetyCardRequest';
+import tzlookup from 'tz-lookup';
+
 
 const iconRetinaUrl = 'assets/leaflet/images/marker-icon-2x.png';
 const iconUrl = 'assets/leaflet/images/marker-icon.png';
@@ -46,10 +50,12 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
   private defaultLng = -98.5795;
 
   // Public signals for the template
-  pendingLocation = signal<{ lat: number; lng: number; label: string } | null>(null);
+  pendingLocation = signal<{ lat: number; lng: number; label: string ;timeZone:string;} | null>(null);
   isLoading = signal(false);
 
   private clicksDisabled = false;
+
+  private safetyService= inject(SafetyService);
 
   constructor() {
     effect(() => {
@@ -105,7 +111,10 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
 
       try {
         const label = await this.reverseGeocode(lat, lng);
-        this.pendingLocation.set({ lat, lng, label });
+        this.pendingLocation.set({
+          lat, lng, label,
+          timeZone: ''
+        });
         this.placeMarker(lat, lng, label);
       } catch (err) {
         console.error('Reverse geocode error:', err);
@@ -113,7 +122,8 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
         this.pendingLocation.set({
           lat,
           lng,
-          label: `Selected location (${lat.toFixed(5)}, ${lng.toFixed(5)})`
+          label: `Selected location (${lat.toFixed(5)}, ${lng.toFixed(5)})`,
+          timeZone:""
         });
         this.placeMarker(lat, lng, this.pendingLocation()!.label);
       } finally {
@@ -149,7 +159,23 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
     const pending = this.pendingLocation();
     if (!pending) return;
 
-    this.locationService.setLocation(pending);
+  
+   // Get the timezone from coordinates
+  let timezone = 'America/New_York'; // fallback
+  try 
+  {
+    timezone = tzlookup(pending.lat, pending.lng);
+    pending.timeZone = timezone;
+  }
+  catch (e) 
+  {
+    console.warn('Could not determine timezone', e);
+  }
+  this.locationService.setLocation(pending);
+
+
+    console.log(getRealLocalHour(pending.timeZone))
+    this.checkLocationSafety(pending.lat, pending.lng, pending.timeZone)
     this.showConfirmedLocation(pending.lat, pending.lng, pending.label);
   }
 
@@ -192,6 +218,25 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
     }
 
     return data.display_name;
+  }
+
+  checkLocationSafety(lat:number, lon:number, timezone:string)
+  {
+     
+    let reqData:SafetyCardRequest = 
+    {
+       lat:lat,
+       lon :lon,
+       neededDate:getRealLocalHour(timezone),//can remove the reel time now
+       timeZone:timezone,
+       granularity:60
+    }
+   
+    console.log(timezone);
+    this.safetyService.locationSafety(reqData).subscribe(res=>
+      {
+          console.log(res)
+      })
   }
 
   ngOnDestroy() {
