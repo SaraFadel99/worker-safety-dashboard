@@ -53,7 +53,7 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
   isLoading = signal(false);
 
   private clicksDisabled = false;
-
+   @Input() disabled = false;
   // The dashboard owns the safety API call.
  @Input() set locationToConfirm(location: SelectedLocation | null) {
   if (!location) return;
@@ -170,7 +170,12 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
     this.placeMarker(lat, lng, label);
   }
 
-  confirmLocation() {
+  confirmLocation() 
+  {
+      if (this.disabled) {
+    return;
+  }
+
     const pending = this.pendingLocation();
     if (!pending) return;
 

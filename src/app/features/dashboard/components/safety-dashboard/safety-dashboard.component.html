@@ -1,29 +1,4 @@
-<!-- 
-<div class="actions">
-    <button class="secondary" (click)="toggleMap()">
-      Or pick location on the map
-    </button>
-</div>
-@if(showMap())
-{
-  <app-leaflet-map (locationConfirmed)="onLocationConfirmed($event)"></app-leaflet-map>
-}
-@if(!showMap())
-{
-  <app-map-search
-    (locationPicked)="onLocationPicked($event)">
-  </app-map-search>
-}
 
-<app-site-card
-  [state]="cardState()"
-  [data]="cardData()"
-  [errorMessage]="errorMessage()">
-</app-site-card> -->
-
-
-
-<!-- src/app/app.component.html -->
 <div class="app-container">
   <!-- Header -->
   <header class="app-header">
@@ -58,11 +33,15 @@
             <div class="toggle-group">
               <button 
                 [class.active]="!showMap()" 
+                  [disabled]="cardState() === 'loading'"
+
                 (click)="showMap.set(false)">
                 🔍 Search
               </button>
               <button 
                 [class.active]="showMap()" 
+                  [disabled]="cardState() === 'loading'"
+
                 (click)="showMap.set(true)">
                 🗺️ Map
               </button>
@@ -72,10 +51,12 @@
           <div class="map-container">
             @if(showMap()) {
               <app-leaflet-map 
+                  [disabled]="cardState() === 'loading'"
                 (locationConfirmed)="onLocationPicked($event)">
               </app-leaflet-map>
             } @else {
               <app-map-search 
+                [disabled]="cardState() === 'loading'"
                 (locationPicked)="onLocationPicked($event)">
               </app-map-search>
             }

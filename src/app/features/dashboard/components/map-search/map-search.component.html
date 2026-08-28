@@ -7,10 +7,11 @@
       [(ngModel)]="query"
       (keyup.enter)="onSearch()"
       (input)="onSearch()"
+        [disabled]="disabled || isLoading()"
       placeholder="Type an address or place..."
       autocomplete="off"
     />
-    <button (click)="onSearch()" [disabled]="isLoading()">Search</button>
+    <button (click)="onSearch()"   [disabled]="disabled || isLoading()">Search</button>
   </div>
 
   @if (isLoading()) {

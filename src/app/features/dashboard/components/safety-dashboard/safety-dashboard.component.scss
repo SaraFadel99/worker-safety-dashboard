@@ -251,3 +251,9 @@
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
+
+.toggle-group button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

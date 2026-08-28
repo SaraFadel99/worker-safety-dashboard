@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 import { SelectedLocation } from '../../services/location.service';
@@ -29,8 +29,12 @@ pendingLocation = signal<SelectedLocation | null>(null);
   query = '';
   results = signal<any[]>([]);
   isLoading = signal(false);
+@Input() disabled = false;
 
   async onSearch() {
+     if (this.disabled || !this.query.trim()) {
+    return;
+  }
     if (!this.query.trim()) {
       this.results.set([]);
       return;
@@ -50,7 +54,10 @@ pendingLocation = signal<SelectedLocation | null>(null);
 
   selectResult(result: any) 
   {
-  console.log(result)
+    if (this.disabled) 
+    {
+     return;
+    }
     const lat = result.y;
     const lng = result.x;
   //  const name= result.
@@ -66,23 +73,15 @@ pendingLocation = signal<SelectedLocation | null>(null);
       lng,
       label: result.label
     });
-  //   const loc: SelectedLocation = {
-  //     lat: result.y,
-  //     lng: result.x,
-  //     label: result.label
-  //   };
-    
-  // const confirmed = window.confirm(
-  //   `Use this location?\n\n${loc.label}`
-  // );
 
-  // if (confirmed) {
-  //   this.locationPicked.emit(loc);
-  //   this.results.set([]);
-  // }
   }
 
-confirmLocation() {
+confirmLocation()
+ {
+    if (this.disabled) 
+  {
+    return;
+  }
   const location = this.pendingLocation();
 
   if (!location) {
