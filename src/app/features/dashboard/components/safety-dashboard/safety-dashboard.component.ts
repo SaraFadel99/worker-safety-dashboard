@@ -46,6 +46,7 @@ private safetyService = inject(SafetyService);
     const timezone = tzlookup(location.lat, location.lng);
 
     const request: SafetyCardRequest = {
+      siteName:location.label,
       lat: location.lat,
       lon: location.lng,
       neededDate: getRealLocalHour(timezone),
@@ -71,32 +72,32 @@ private safetyService = inject(SafetyService);
 
 
 
-onLocationConfirmed(location: SelectedLocation) {
-  const timezone = tzlookup(location.lat, location.lng);
+// onLocationConfirmed(location: SelectedLocation) {
+//   const timezone = tzlookup(location.lat, location.lng);
 
-  const request: SafetyCardRequest = {
-    lat: location.lat,
-    lon: location.lng,
-    neededDate: getRealLocalHour(timezone),
-    timeZone: timezone,
-    granularity: 60
-  };
+//   const request: SafetyCardRequest = {
+//     lat: location.lat,
+//     lon: location.lng,
+//     neededDate: getRealLocalHour(timezone),
+//     timeZone: timezone,
+//     granularity: 60
+//   };
 
-  this.cardState.set('loading');
-  this.cardData.set(null);
+//   this.cardState.set('loading');
+//   this.cardData.set(null);
 
-  this.safetyService.locationSafety(request).subscribe({
-    next: response => {
-      this.cardData.set(response);
-      this.cardState.set('success');
-    },
-    error: error => {
-      console.error(error);
-      this.errorMessage.set('Unable to load safety data.');
-      this.cardState.set('error');
-    }
-  });
-}
+//   this.safetyService.locationSafety(request).subscribe({
+//     next: response => {
+//       this.cardData.set(response);
+//       this.cardState.set('success');
+//     },
+//     error: error => {
+//       console.error(error);
+//       this.errorMessage.set('Unable to load safety data.');
+//       this.cardState.set('error');
+//     }
+//   });
+// }
 
   toggleTheme(): void {
     this.isDarkTheme.update(v => !v);

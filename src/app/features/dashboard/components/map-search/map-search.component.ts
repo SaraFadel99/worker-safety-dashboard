@@ -50,8 +50,10 @@ pendingLocation = signal<SelectedLocation | null>(null);
 
   selectResult(result: any) 
   {
+  console.log(result)
     const lat = result.y;
     const lng = result.x;
+  //  const name= result.
     if (!isInsideUSA(lat, lng)) 
     {
       alert('Please choose a location inside the United States.');

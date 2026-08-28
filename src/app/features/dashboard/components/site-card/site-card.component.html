@@ -47,7 +47,7 @@
     <div class="safety-card__success" *ngIf="data as d">
       <div class="safety-card__header">
         <div>
-          <h3 class="safety-card__site">Selected site</h3>
+          <h3 class="safety-card__site">{{d.siteName}}</h3>
           <p class="safety-card__coords">{{ d.latitude.toFixed(2) }} N, {{ d.longitude.toFixed(2) }} W</p>
         </div>
         <span class="badge" [class]="'badge--' + badgeClass(d.badge)">{{ d.badge }}</span>

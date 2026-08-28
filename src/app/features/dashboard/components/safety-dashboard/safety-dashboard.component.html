@@ -72,7 +72,7 @@
           <div class="map-container">
             @if(showMap()) {
               <app-leaflet-map 
-                (locationConfirmed)="onLocationConfirmed($event)">
+                (locationConfirmed)="onLocationPicked($event)">
               </app-leaflet-map>
             } @else {
               <app-map-search 
