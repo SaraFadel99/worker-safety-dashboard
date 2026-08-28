@@ -27,6 +27,16 @@ private safetyService = inject(SafetyService);
   errorMessage = signal('');
   pendingLocation = signal<SelectedLocation | null>(null);
   showMap = signal(false);
+  isDarkTheme = signal(false);
+    isLoading = signal(false);
+
+    constructor() {
+    // Check system preference for dark mode
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    this.isDarkTheme.set(prefersDark);
+    this.applyTheme(prefersDark);
+  }
+
 
   toggleMap() {
     this.showMap.update(showing => !showing);
@@ -87,4 +97,45 @@ onLocationConfirmed(location: SelectedLocation) {
     }
   });
 }
+
+  toggleTheme(): void {
+    this.isDarkTheme.update(v => !v);
+    this.applyTheme(this.isDarkTheme());
+  }
+
+  private applyTheme(isDark: boolean): void {
+    document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  }
+
+  
+  private fetchSafetyData(lat: number, lng: number): void {
+    this.cardState.set('loading');
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+
+    // Simulate API call
+    setTimeout(() => {
+      // Mock data - replace with actual API call
+      const mockData: SafetyCardResponse = {
+        siteName:'',
+        latitude: lat,
+        longitude: lng,
+        timestamp: new Date(),
+        heatIndexF: 75 + Math.random() * 20,
+        wetBulbF: 60 + Math.random() * 15,
+        humidityPercent: 40 + Math.random() * 40,
+        aqi: 30 + Math.random() * 70,
+        solarIrradianceGhi: 200 + Math.random() * 500,
+        badge: Math.random() > 0.5 ? 'Heat Advisory' : 'Normal Conditions',
+        suggestion: Math.random() > 0.5 
+          ? 'Move heavy labor indoors until after 4pm. Mandatory water breaks every 30 min.'
+          : 'Conditions are within normal range. Standard hydration practices apply.',
+        keyConcern: Math.random() > 0.5 ? 'High temperature expected' : 'No immediate concerns'
+      };
+
+      this.cardData.set(mockData);
+ //     this.cardState.set('has-data');
+      this.isLoading.set(false);
+    }, 1500);
+  }
 }

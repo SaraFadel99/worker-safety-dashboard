@@ -1,4 +1,4 @@
-
+<!-- 
 <div class="actions">
     <button class="secondary" (click)="toggleMap()">
       Or pick location on the map
@@ -19,4 +19,80 @@
   [state]="cardState()"
   [data]="cardData()"
   [errorMessage]="errorMessage()">
-</app-site-card>
+</app-site-card> -->
+
+
+
+<!-- src/app/app.component.html -->
+<div class="app-container">
+  <!-- Header -->
+  <header class="app-header">
+    <div class="container">
+      <div class="header-content">
+        <a href="#" class="logo">
+          <span class="logo-icon">🛡️</span>
+          <span class="logo-text">Safe<span>Work</span></span>
+          <span class="logo-badge">Weather Safety</span>
+        </a>
+
+        <div class="header-actions">
+          <button 
+            class="theme-toggle" 
+            (click)="toggleTheme()"
+            [attr.aria-label]="isDarkTheme() ? 'Switch to light mode' : 'Switch to dark mode'">
+            {{ isDarkTheme() ? '☀️' : '🌙' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <div class="content-grid">
+        <!-- Left Column: Map / Search -->
+        <section class="map-area">
+          <div class="map-toggle-area">
+            <span class="toggle-label">📍 Find Location</span>
+            <div class="toggle-group">
+              <button 
+                [class.active]="!showMap()" 
+                (click)="showMap.set(false)">
+                🔍 Search
+              </button>
+              <button 
+                [class.active]="showMap()" 
+                (click)="showMap.set(true)">
+                🗺️ Map
+              </button>
+            </div>
+          </div>
+
+          <div class="map-container">
+            @if(showMap()) {
+              <app-leaflet-map 
+                (locationConfirmed)="onLocationConfirmed($event)">
+              </app-leaflet-map>
+            } @else {
+              <app-map-search 
+                (locationPicked)="onLocationPicked($event)">
+              </app-map-search>
+            }
+          </div>
+        </section>
+
+        <!-- Right Column: Site Card -->
+        <section class="site-card-area">
+          <div class="site-card-wrapper">
+            <app-site-card
+              [state]="cardState()"
+              [data]="cardData()"
+              [errorMessage]="errorMessage()">
+            </app-site-card>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>

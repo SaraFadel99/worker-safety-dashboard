@@ -1,0 +1,253 @@
+
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+}
+
+// App Header
+.app-header {
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+
+    .logo-icon {
+      font-size: 2rem;
+    }
+
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      
+      span {
+        color: var(--primary-600);
+      }
+    }
+
+    .logo-badge {
+      font-size: 0.65rem;
+      background: var(--primary-600);
+      color: white;
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-full);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    .theme-toggle {
+      background: var(--gray-100);
+      border: none;
+      border-radius: var(--radius-full);
+      padding: 0.5rem;
+      cursor: pointer;
+      font-size: 1.25rem;
+      transition: all var(--transition-fast);
+      
+      &:hover {
+        background: var(--gray-200);
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+// Main Content
+.main-content {
+  flex: 1;
+  padding: 2rem 0;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 1.2fr 0.8fr;
+    align-items: start;
+  }
+}
+
+// Left Column - Map/Search Area
+.map-area {
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-base);
+  min-height: 500px;
+
+  &:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .map-toggle-area {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    background: var(--bg-secondary);
+
+    .toggle-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .toggle-group {
+      display: flex;
+      gap: 0.25rem;
+      padding: 0.25rem;
+      background: var(--gray-100);
+      border-radius: var(--radius-md);
+
+      button {
+        padding: 0.4rem 1rem;
+        border: none;
+        border-radius: var(--radius-sm);
+        font-size: 0.813rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all var(--transition-fast);
+        background: transparent;
+        color: var(--text-muted);
+
+        &.active {
+          background: white;
+          color: var(--text-primary);
+          box-shadow: var(--shadow-sm);
+        }
+
+        &:hover:not(.active) {
+          color: var(--text-secondary);
+        }
+      }
+    }
+  }
+
+  .map-container {
+    height: 500px;
+    position: relative;
+    
+    @media (max-height: 800px) {
+      height: 400px;
+    }
+  }
+}
+
+// Right Column - Site Card
+.site-card-area {
+  .site-card-wrapper {
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-base);
+    min-height: 300px;
+
+    &:hover {
+      box-shadow: var(--shadow-md);
+    }
+  }
+}
+
+// Responsive Adjustments
+@media (max-width: 1024px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .map-area .map-container {
+    height: 400px;
+  }
+}
+
+@media (max-width: 640px) {
+  .app-header .header-content {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .header-actions {
+    justify-content: center;
+  }
+
+  .main-content {
+    padding: 1rem 0;
+  }
+
+  .map-area {
+    border-radius: var(--radius-lg);
+  }
+
+  .map-area .map-container {
+    height: 300px;
+  }
+
+  .site-card-area .site-card-wrapper {
+    border-radius: var(--radius-lg);
+  }
+
+  .map-area .map-toggle-area {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+
+    .toggle-group {
+      justify-content: center;
+    }
+  }
+}
+
+// Loading Skeleton
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--gray-200) 25%,
+    var(--gray-100) 50%,
+    var(--gray-200) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-md);
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
