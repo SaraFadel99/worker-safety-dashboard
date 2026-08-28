@@ -1,6 +1,19 @@
-<app-map-search
-  (locationPicked)="onLocationPicked($event)">
-</app-map-search>
+
+<div class="actions">
+    <button class="secondary" (click)="toggleMap()">
+      Or pick location on the map
+    </button>
+</div>
+@if(showMap())
+{
+  <app-leaflet-map (locationConfirmed)="onLocationConfirmed($event)"></app-leaflet-map>
+}
+@if(!showMap())
+{
+  <app-map-search
+    (locationPicked)="onLocationPicked($event)">
+  </app-map-search>
+}
 
 <app-site-card
   [state]="cardState()"
