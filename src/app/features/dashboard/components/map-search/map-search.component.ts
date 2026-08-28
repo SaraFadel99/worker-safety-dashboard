@@ -1,8 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
-import { LocationService, SelectedLocation } from '../../services/location.service';
+import { SelectedLocation } from '../../services/location.service';
 import { CommonModule } from '@angular/common';
 import { isInsideUSA } from '../../services/mapHelper';
 import { EventEmitter, Output } from '@angular/core';
@@ -16,6 +15,7 @@ import { EventEmitter, Output } from '@angular/core';
 export class MapSearchComponent {
 
 @Output() locationPicked = new EventEmitter<SelectedLocation>();
+pendingLocation = signal<SelectedLocation | null>(null);
 
   private provider = new OpenStreetMapProvider({
       params: {
@@ -25,8 +25,6 @@ export class MapSearchComponent {
     // bounded: 1
   }
   });
-  private locationService = inject(LocationService);
-  private router = inject(Router);
 
   query = '';
   results = signal<any[]>([]);
@@ -59,28 +57,41 @@ export class MapSearchComponent {
       alert('Please choose a location inside the United States.');
       return;
     }
-    const loc: SelectedLocation = {
-      lat: result.y,
-      lng: result.x,
-      label: result.label
-    };
-    
-  const confirmed = window.confirm(
-    `Use this location?\n\n${loc.label}`
-  );
-
-  if (confirmed) {
-    this.locationPicked.emit(loc);
+    this.isLoading.set(false);
     this.results.set([]);
-  }
-   ////this.locationService.setLocation(loc);
-    // Option A: navigate to map
-   //// this.router.navigate(['/mapView']);
-    // Option B: if you keep both components visible, just emit or let the service signal update the map
+    this.pendingLocation.set({
+      lat,
+      lng,
+      label: result.label
+    });
+  //   const loc: SelectedLocation = {
+  //     lat: result.y,
+  //     lng: result.x,
+  //     label: result.label
+  //   };
+    
+  // const confirmed = window.confirm(
+  //   `Use this location?\n\n${loc.label}`
+  // );
+
+  // if (confirmed) {
+  //   this.locationPicked.emit(loc);
+  //   this.results.set([]);
+  // }
   }
 
-  // goToMapPicker() {
-  //   this.locationService.clear();
-  //   this.router.navigate(['/mapView']);
-  // }
+confirmLocation() {
+  const location = this.pendingLocation();
+
+  if (!location) {
+    return;
+  }
+
+  this.locationPicked.emit(location);
+  this.pendingLocation.set(null);
+}
+
+cancelLocation() {
+  this.pendingLocation.set(null);
+}
 }

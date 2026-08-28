@@ -25,5 +25,17 @@
     }
   </ul>
 
+@if (pendingLocation()) {
+  <div class="status-bar confirm">
+    <div class="address">
+      <strong>Selected location:</strong>
+      <span>{{ pendingLocation()?.label }}</span>
+    </div>
 
+    <div class="actions">
+      <button class="btn cancel" (click)="cancelLocation()">Cancel</button>
+      <button class="btn confirm" (click)="confirmLocation()">Confirm</button>
+    </div>
+  </div>
+}
 </div>
