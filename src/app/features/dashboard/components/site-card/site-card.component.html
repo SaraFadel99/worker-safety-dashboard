@@ -2,14 +2,9 @@
 
   <!-- IDLE: nothing picked on the map yet -->
   <div *ngSwitchCase="'idle'" class="safety-card__idle">
-    <div class="safety-card__idle-icon" aria-hidden="true">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-        <path d="M12 21s-7-6.2-7-11.2A7 7 0 0 1 19 9.8C19 14.8 12 21 12 21Z" stroke="currentColor" stroke-width="1.6"/>
-        <circle cx="12" cy="9.5" r="2.4" stroke="currentColor" stroke-width="1.6"/>
-      </svg>
-    </div>
-    <p class="safety-card__idle-title">Pick a site on the map</p>
-    <p class="safety-card__idle-sub">Search an address or drop a pin to see its heat safety reading.</p>
+
+    <p class="safety-card__idle-title">Know if it's safe to work outside</p>
+    <p class="safety-card__idle-sub">SafeWork checks real-time weather and heat-risk data for any location, then gives you a clear safety reading — so you can decide whether to send crews out, right now or later today.<br>Powered by live weather data and updated heat-risk modeling — accurate to your exact site, not just your city.</p>
   </div>
 
   <!-- LOADING: chain is running (Open-Meteo -> FortyGuard -> Gemini) -->

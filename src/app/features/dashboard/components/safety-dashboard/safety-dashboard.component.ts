@@ -113,7 +113,7 @@ private safetyService = inject(SafetyService);
     this.cardState.set('loading');
     this.isLoading.set(true);
     this.errorMessage.set('');
-
+//To Do handle the case if timeout 
     // Simulate API call
     setTimeout(() => {
       // Mock data - replace with actual API call
