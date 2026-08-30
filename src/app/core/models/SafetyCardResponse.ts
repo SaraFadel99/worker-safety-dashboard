@@ -12,6 +12,7 @@
     badge:string;
     suggestion:string;
     keyConcern:string;
+    isDegraded?: boolean;
   }     
 
 
