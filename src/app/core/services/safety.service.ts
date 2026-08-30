@@ -10,8 +10,9 @@ import { Observable } from 'rxjs';
 export class SafetyService {
 
   private readonly http = inject(HttpClient);
- 
-  private API_URL :string = "https://localhost:7008/api/Safety"
+  private API_URL :string =  "https://workersafety-hwgqg7bte5eeczds.centralus-01.azurewebsites.net/api/Safety";
+
+  //"https://localhost:7008/api/Safety"
   
   locationSafety(reqData: SafetyCardRequest ):Observable<SafetyCardResponse>
   { 
