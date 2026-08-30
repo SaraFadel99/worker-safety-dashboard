@@ -38,20 +38,66 @@ $radius: 14px;
   border-radius: 999px;
   white-space: nowrap;
 
-  &.badge--high {
-    background: #fdeceb;
-    color: #b3261e;
-  }
-  &.badge--moderate {
-    background: #fdf3e0;
-    color: #9a6b0a;
-  }
-  &.badge--low {
+  &.badge--normal {
     background: #e7f6ec;
     color: #1e7b3c;
   }
+
+  &.badge--caution {
+    background: #fff3d6;
+    color: #9a6b0a;
+  }
+
+  &.badge--extreme-caution {
+    background: #fde7b5;
+    color: #a85b00;
+  }
+
+  &.badge--danger {
+    background: #fdd7d7;
+    color: #b3261e;
+  }
+
+  &.badge--extreme-danger {
+    background: #f2b3b3;
+    color: #7f1d1d;
+  }
 }
 
+.safety-card__banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+
+  &--normal {
+    background: #e7f6ec;
+    color: #1e7b3c;
+  }
+
+  &--caution {
+    background: #fff3d6;
+    color: #9a6b0a;
+  }
+
+  &--extreme-caution {
+    background: #fde7b5;
+    color: #a85b00;
+  }
+
+  &--danger {
+    background: #fdd7d7;
+    color: #b3261e;
+  }
+
+  &--extreme-danger {
+    background: #f2b3b3;
+    color: #7f1d1d;
+  }
+}
 .safety-card__stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
