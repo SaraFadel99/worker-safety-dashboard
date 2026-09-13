@@ -94,10 +94,12 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
       maxBoundsViscosity: 0.85
     }).setView([this.defaultLat, this.defaultLng], 4);
 
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 22,
       minZoom: 3,
-      attribution: '© OpenStreetMap contributors'
+      attribution: '© OpenStreetMap contributors © CARTO',
+      subdomains: 'abcd'
     }).addTo(this.map);
 
     this.map.on('click', async (e: L.LeafletMouseEvent) => {
