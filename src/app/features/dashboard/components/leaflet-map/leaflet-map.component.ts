@@ -94,13 +94,22 @@ export class LeafletMapComponent implements AfterViewInit, OnDestroy {
       maxBoundsViscosity: 0.85
     }).setView([this.defaultLat, this.defaultLng], 4);
 
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 22,
+    L.tileLayer(
+      'https://basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png?key=cb1_3j6h_1_a9432f015c820c8f6ce0f395',
+  {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    subdomains: 'abcd',
+        maxZoom: 22,
       minZoom: 3,
-      attribution: '© OpenStreetMap contributors © CARTO',
-      subdomains: 'abcd'
-    }).addTo(this.map);
+  }
+).addTo(this.map);
+
+    // L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //   maxZoom: 22,
+    //   minZoom: 3,
+    //   attribution: '© OpenStreetMap contributors © CARTO',
+    //   subdomains: 'abcd'
+    // }).addTo(this.map);
 
     this.map.on('click', async (e: L.LeafletMouseEvent) => {
       if (this.clicksDisabled || this.isLoading() || this.pendingLocation()) {
